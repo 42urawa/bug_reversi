@@ -86,7 +86,7 @@ end
 def pos_stone_color(board, row, col)
   return nil unless (0..7).cover?(row) && (0..7).cover?(col)
 
-  board[row][col]
+  board[col][row]
 end
 
 def finished?(board)
