@@ -70,10 +70,10 @@ end
 
 # target_posはひっくり返す対象セル
 def turn!(board, target_pos, attack_stone_color, direction)
-  return false if target_pos.out_of_board?
+  return false if target_pos.out_of_board? || pos_stone_color(board, target_pos.col, target_pos.row) == BLANK_CELL
 
   next_pos = target_pos.next_position(direction)
-  next_stone = pos_stone_color(board, next_pos.row, next_pos.col)
+  next_stone = pos_stone_color(board, next_pos.col, next_pos.row)
 
   if (next_stone == attack_stone_color) || turn!(board, next_pos, attack_stone_color, direction)
     board[target_pos.col][target_pos.row] = attack_stone_color
@@ -83,14 +83,23 @@ def turn!(board, target_pos, attack_stone_color, direction)
   end
 end
 
-def pos_stone_color(board, row, col)
+def pos_stone_color(board, col, row)
   return nil unless (0..7).cover?(row) && (0..7).cover?(col)
 
   board[col][row]
 end
 
 def finished?(board)
-  false
+  [WHITE_STONE, BLACK_STONE].each do |attack_stone_color|
+    ROW.each_with_index do |row_value, row_index|
+      COL.each_with_index do |col_value, col_index|
+        next unless board[col_index][row_index] == BLANK_CELL
+        return false if put_stone!(board, row_value + col_value, attack_stone_color)
+      end
+    end
+  end
+
+  true
 end
 
 def placeable?(board, attack_stone_color)
