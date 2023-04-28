@@ -90,11 +90,11 @@ def pos_stone_color(board, col, row)
 end
 
 def finished?(board)
-  for attack_stone_color in 1..2 do
-    ROW.each_with_index do |row, row_index|
-      COL.each_with_index do |col, col_index|
+  [WHITE_STONE, BLACK_STONE].each do |attack_stone_color|
+    ROW.each_with_index do |row_value, row_index|
+      COL.each_with_index do |col_value, col_index|
         next unless board[col_index][row_index] == BLANK_CELL
-        return false if put_stone!(board, row + col, attack_stone_color)
+        return false if put_stone!(board, row_value + col_value, attack_stone_color)
       end
     end
   end
